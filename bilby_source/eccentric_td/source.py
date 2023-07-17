@@ -1,4 +1,4 @@
-"""Source models for Numerical Relativity waveform injection in bilby PE."""
+"""Source model for EccentricTD in bilby PE."""
 from pycbc.waveform.utils import taper_timeseries
 from pycbc.waveform import get_td_waveform
 import numpy as np
@@ -14,7 +14,7 @@ def frequency_domain_source_model(
     eccentricity,
     **kwargs
 ):
-    """Frequency domain source model for injecting NR data.
+    """Frequency domain source model for EccentricTD.
 
     Parameters:
     -----------
@@ -31,13 +31,15 @@ def frequency_domain_source_model(
     eccentricity: str
         Initial eccentricity
     """
+    delta_t = 1/(2 * max(frequency))
+    f_min = min(frequency)
     hp_td, hc_td = get_td_waveform(approximant="EccentricTD",
                                    mass1=mass_1,
                                    mass2=mass_2,
                                    eccentricity=eccentricity,
-                                   f_ref=frequency[0],
-                                   f_lower=frequency[0],
-                                   delta_t=1/2048,
+                                   f_ref=f_min,
+                                   f_lower=f_min,
+                                   delta_t=delta_t,
                                    inclination=theta_jn,
                                    distance=luminosity_distance,
                                    coa_phase=phase)
