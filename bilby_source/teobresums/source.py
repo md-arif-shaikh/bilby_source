@@ -424,3 +424,61 @@ def time_domain_modes(
     t, hp, hc, hlm, _ = EOBRun_module.EOBRunPy(pars)
     return {"t": t,
             "hlm": {(2, 2): hlm["1"][0] * np.exp(-1j * hlm["1"][1])}}
+
+def time_domain_polarisations(
+        dt,
+        initial_frequency,
+        mass_1,
+        mass_2,
+        eccentricity,
+        a_1,
+        a_2,
+        luminosity_distance,
+        theta_jn,
+        phase,
+        **kwargs):
+    """
+    Frequency domain source model for TEOBResumS.
+
+    Parameters:
+    -----------
+    mass_1: float
+        First component mass in units of solar mass to scale the NR waveform.
+    mass_2: float
+        Second component mass in units of solar mass to scale the NR waveform.
+    eccentricity: float
+        Eccentricity at initial frequency.
+    luminosity_distance: float
+        Luminosity distance in units of Mpc to scale the NR waveform.
+    theta_jn: float
+        Inclination angle to compute sYlm.
+    phase: float
+        phase to compute the sYlm.
+
+    Returns:
+    dictionary of frequency domain plus and cross polarisations.
+    """
+    srate_interp = 1.0 / dt
+
+    pars = {
+        "M": mass_1 + mass_2,
+        "q": mass_1 / mass_2,
+        "ecc": eccentricity,
+        "Lambda1": 0.0,
+        "Lambda2": 0.0,
+        "chi1": a_1 or 0.,
+        "chi2": a_2 or 0.,
+        "domain": 0,  # 0 for TD, 1 for FD
+        "arg_out": 0,  # Output hlm/hflm. Default = 0
+        "srate_interp": srate_interp,
+        "use_geometric_units": 0,  # Output quantities in geometric units. Default = 1
+        "initial_frequency": initial_frequency,
+        # in Hz if use_geometric_units = 0, else in geometric units
+        "interp_uniform_grid": 1,  # Interpolate mode by mode on a uniform grid. Default = 0 (no interpolation)
+        "distance": luminosity_distance,  # Mpc,
+        "inclination": theta_jn,
+        "output_hpc": 0,
+        "dt_interp": dt,
+        **kwargs,
+    }
+    return EOBRun_module.EOBRunPy(pars)
