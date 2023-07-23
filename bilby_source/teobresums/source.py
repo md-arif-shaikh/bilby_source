@@ -258,11 +258,11 @@ def fourier_transform_time_domain(
         hc = hc[-N_max:]
 
         h_plus = taper_timeseries(
-            TimeSeries(hp, delta_t=dt), tapermethod="TAPER_START"
+            TimeSeries(hp, delta_t=dt), tapermethod="startend"
         ).to_frequencyseries()
 
         h_cross = taper_timeseries(
-            TimeSeries(hc, delta_t=dt), tapermethod="TAPER_START"
+            TimeSeries(hc, delta_t=dt), tapermethod="startend"
         ).to_frequencyseries()
 
     elif len(t) <= N_max:
@@ -270,8 +270,8 @@ def fourier_transform_time_domain(
         new_hp = np.zeros(N_max)
         new_hc = np.zeros(N_max)
 
-        new_hp[deficit:N_max] = taper_timeseries(TimeSeries(hp, delta_t=dt), tapermethod="TAPER_START")
-        new_hc[deficit:N_max] = taper_timeseries(TimeSeries(hc, delta_t=dt), tapermethod="TAPER_START")
+        new_hp[deficit:N_max] = taper_timeseries(TimeSeries(hp, delta_t=dt), tapermethod="startend")
+        new_hc[deficit:N_max] = taper_timeseries(TimeSeries(hc, delta_t=dt), tapermethod="startend")
         hp, hc = new_hp, new_hc
 
         h_plus = TimeSeries(new_hp, delta_t=dt).to_frequencyseries()
