@@ -425,6 +425,7 @@ def time_domain_modes(
     return {"t": t,
             "hlm": {(2, 2): hlm["1"][0] * np.exp(-1j * hlm["1"][1])}}
 
+
 def time_domain_polarisations(
         dt,
         initial_frequency,
